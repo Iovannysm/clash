@@ -1,6 +1,6 @@
 import {Game} from '../models';
 
-
+// Index
 const index = function(req, res) {
   Game.find({}, function (error, foundGames) {
     if (error) {
@@ -19,6 +19,7 @@ const index = function(req, res) {
   });
 };
 
+// Show
 const show = function(req, res) {
   Game.findById(req.params.id, function (error, foundGame) {
     if(error) {
@@ -36,6 +37,7 @@ const show = function(req, res) {
   });
 };
 
+// Create
 const create = function(req, res) {
   Game.create(req.body, function(error, createdGame) {
     if(error) {
@@ -53,6 +55,7 @@ const create = function(req, res) {
   });
 };
 
+// Update 
 const update = function(req, res) {
   Game.findByIdAndUpdate(
     req.params.id,
@@ -75,6 +78,7 @@ const update = function(req, res) {
   );
 };
 
+// Delete 
 const destroy = function(req, res) {
   Game.findByIdAndDelete(req.params.id, function(error, deletedGame) {
     if(error) {
