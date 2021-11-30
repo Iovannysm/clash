@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-module.exports = async (req, res, next) => {
+module.exports = async function (req, res, next) {
   try {
     
     const bearer = req.headers.authorization;

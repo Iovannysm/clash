@@ -4,6 +4,8 @@ import routes from './routes';
 
 
 
+require("./config/db.connection");
+
 const app = express();
 const PORT = process.env.PORT;
 
