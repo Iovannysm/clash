@@ -1,23 +1,23 @@
 import express from "express";
-import methodOverride from "method-override"
+import cors from 'cors';
+import routes from './routes';
 
 
-/* === System Variables === */
+
 const app = express();
-const PORT = 4000;
-
-/* === System Configuration === */
-app.use(express.urlencoded({extended: false}))
-app.set("view engine", "ejs");
-app.use(express.static("public"));
-app.use(methodOverride('_method'));
+const PORT = process.env.PORT;
 
 
+app.use(cors());
 
-app.get("/*", function(res, req) {
-  const context = {error: req.error};
-  escape.render("404", context);
-})
+app.use(express.json());
+
+
+
+
+
+
+
 
 
 app.listen(PORT, function() {

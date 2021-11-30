@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const GameSchema = new Schema(
+const gameSchema = new Schema(
   {
     title: String,
     img: String,
@@ -9,6 +9,6 @@ const GameSchema = new Schema(
   }
 );
 
-const Game = mongoose.model('Game', GameSchema);
+const Game = mongoose.model('Game', gameSchema);
 
 module.exports = Game;
