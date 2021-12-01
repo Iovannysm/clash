@@ -1,4 +1,4 @@
-import { Event } from '../models';
+const { Event } = require("../models");
 
 // Index
 const index = function(req, res) {
@@ -11,7 +11,7 @@ const index = function(req, res) {
     res.json({
       status: 200,
       message: "All Events Found",
-      events: foundEvents,
+      event: foundEvents,
       total: foundEvents.length,
       requestedAt: new Date(),
     });

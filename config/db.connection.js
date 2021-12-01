@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 const connectionString =
@@ -6,9 +6,7 @@ const connectionString =
 
 const configOptions = {
   useNewUrlParser: true,
-  useCreateIndex: true,
   useUnifiedTopology: true,
-  useFindAndModify: false,
 };
 
 mongoose

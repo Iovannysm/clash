@@ -1,4 +1,4 @@
-import { User } from '../models';
+const { User } = require("../models")
 
 const show = async function(req, res, next) {
   try {

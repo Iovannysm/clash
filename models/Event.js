@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const eventSchema = new Schema(
@@ -7,7 +7,7 @@ const eventSchema = new Schema(
     // game: game._id,
     content: String,
     date: Date,
-    attendees: [user._id],
+    // attendees: [User._id],
   }
 );
 

@@ -1,4 +1,4 @@
-import {Game} from '../models';
+const { Game } = require("../models"); 
 
 // Index
 const index = function(req, res) {

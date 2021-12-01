@@ -1,8 +1,8 @@
-import control from '../controllers';
+const control = require("../controllers");
 const router = require("express").Router();
 
 
-import authRequired from "../middleware/authRequired";
+const authRequired =  require("../middleware/authRequired");
 
 router.get("/", authRequired, control.user.show);
 

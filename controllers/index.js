@@ -1,6 +1,6 @@
 module.exports = {
   games: require("./gamesController"),
-  event: require("./eventsController"),
+  events: require("./eventsController"),
   user: require("./usersController"),
   auth: require("./authController"),
 }
