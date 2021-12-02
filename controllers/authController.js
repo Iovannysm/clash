@@ -12,7 +12,7 @@ const register = async function(req, res) {
 
     const salt = await bcrypt.genSalt(15);
     const hash = await bcrypt.hash(req.body.password, salt);
-    const createdUser = await User.create({ ...req.body, password: hash });
+    await User.create({ ...req.body, password: hash });
 
     const foundUser = await User.findOne({ email: req.body.email });
 
