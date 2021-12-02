@@ -5,7 +5,15 @@ const gameSchema = new Schema(
   {
     title: String,
     img: String,
-    content: String
+    content: String,
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      required: true,
+  },
+  },
+  {
+    timestamps: true,
   }
 );
 

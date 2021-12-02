@@ -1,57 +1,59 @@
 const { Event } = require("../models");
+const Game = require("../models/Game");
 
 // Index
-const index = function(req, res) {
-  Event.find({}, function (error, foundEvents) {
-    if (error) {
-      console.log(error);
-      return 
+const index = async function(req, res, next) {
+  try {
+    const allEvents = await Event.find(query).populate("user").sort("-createdAt");
+    const allGames = await Game.find({events: req.params.id}).populate("user").sort("-createdAt");
+
+    context = {
+      events: allEvents,
+      games: allGames
     }
 
-    res.json({
-      status: 200,
-      message: "All Events Found",
-      event: foundEvents,
-      total: foundEvents.length,
-      requestedAt: new Date(),
-    });
+    return res.render("events/index", context);
 
-  });
+  } catch(error) {
+      console.log(error);
+      req.error = error;
+      next();
+  }
 };
 
 // Show
-const show = function(req, res) {
-  Event.findById(req.params.id, function (error, foundEvent) {
-    if(error) {
-      console.log(error);
-      return
+const show = async function(req, res) {
+  try {
+    const event = await Event.findById(req.params.id).populate("user");
+    const game = await Game.findById(req.params.id).populate("user");
+
+    const context = {
+      event: event,
+      game: game
     }
 
-    res.json({
-      status: 302,
-      message: `Found Event with id ${foundEvent._id}`,
-      event: foundEvent,
-      requestedAt: new Date(),
-    });
+    return res.render("event/show", context);
 
-  });
+  } catch(error) {
+      console.log(error);
+      req.error = error;
+      next();
+  }
 };
 
 // Create
 const create = function(req, res) {
-  Event.create(req.body, function(error, createdEvent) {
+  const data = req.body;
+  data.user = req.session.currentUser.id;
+
+  Event.create(req.body, function( error, createdEvent){
     if(error) {
       console.log(error);
-      return
+      req.error = error
+      return next();
     }
 
-    res.json({
-      status: 201,
-      message: "Event Successfully Created",
-      event: createdEvent,
-      requestedAt: new Date(),
-    });
-
+    res.redirect("/events");
   });
 };
 
@@ -67,12 +69,7 @@ const update = function(req, res) {
         return
       }
 
-      res.json({
-        status: 200,
-        message: `Successfully Updated Event with id ${updatedEvent._id}`,
-        event: updatedEvent,
-        requestedAt: new Date(),
-      });
+      res.redirect(`/event/${req.params.id}`);
 
     }
   );
@@ -86,12 +83,7 @@ const destroy = function(req, res) {
       return
     }
 
-    res.json({
-      status: 200,
-      message: `Successfully deleted Event by id ${deletedEvent._id}`,
-      event: deletedEvent,
-      requestedAt: new Date(),
-    });
+    res.redirect("/events");
 
   });
 };

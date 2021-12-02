@@ -3,11 +3,21 @@ const Schema = mongoose.Schema;
 
 const eventSchema = new Schema(
   {
-    // user: user._id,
-    // game: game._id,
+    
     content: String,
-    date: Date,
-    // attendees: [User._id],
+    
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      require
+    },
+    attendees: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    },
+  },
+  {
+    timestamps: true,
   }
 );
 

@@ -1,41 +1,32 @@
-const { User} = require("../models");
+const { User } = require("../models");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
 
 // Register
 const register = async function(req, res) {
   try {
-    const foundUser = await User.findOne({ email: req.body.email });
+    const userExist = await User.exists({ email: req.body.email });
 
-    if(foundUser)
-      return res 
-        .status(400)
-        .json({
-          status: 400,
-          message: "Email address has already been registered. Please try again",
-        });
+    if(userExist) return res.redirect("/login");
+
 
     const salt = await bcrypt.genSalt(15);
     const hash = await bcrypt.hash(req.body.password, salt);
     const createdUser = await User.create({ ...req.body, password: hash });
 
-    return res
-      .status(201)
-      .json({
-        status: 201,
-        message: "Success",
-        createdUser
-      });
+    const foundUser = await User.findOne({ email: req.body.email });
 
+    req.session.currentUser = {
+      id: foundUser._id,
+      username: foundUser.username,
+    }
+        
+    return res.redirect("/events")
+      
   } catch(error) {
     console.log(error);
-    return res
-      .status(500)
-      .json({
-        status: 500,
-        message: "Something went wrong. Please try again",
-      });
-
+    req.error = error
+    return next();
   }
 };
 
@@ -43,61 +34,46 @@ const register = async function(req, res) {
 // Login
 const login = async function (req, res) {
   try {
-    const foundUser = await User.findOne({ email:req.body.email }).select(
-      "+password"
-    );
-    
+    const foundUser = await User.findOne({ email:req.body.email });
+      
     if(!foundUser) {
-      return res 
-      .status(400)
-      .json({
-        status: 400,
-        message: "Username or password is incorrect",
-      });
+      return res.redirect("/register");
     }
 
     const isMatch = await bcrypt.compare(req.body.password, foundUser.password);
 
-    if(isMatch){
-
-      const signedJwt = await jwt.sign(
-        {
-          _id: foundUser._id
-        },
-        process.env.SECRET_KEY,
-        {
-          expiresIn: "1d",
-        }
-      );
-
-      return res
-        .status(200)
-        .json({
-          status: 200,
-          message: "Success",
-          token: signedJwt,
-      });
-
-    } else {
-      return res
-        .status(400)
-        .json({
-          status: 400,
-          message: "Username or password is incorrect",
-      });
+    if(!isMatch){
+      return res.redirect("/login");
     }
 
+    req.session.currentUser = {
+      id: foundUser._id,
+      username: foundUser.username,
+    }
+      
+    return res.redirect("/events");
+        
   } catch(error) {
-    return res 
-      .status(500)
-      .json({
-        status: 500,
-        message: "Something went wrong. Please try again",
-      });
+    console.log(error);
+    req.error = error;
+    return next();
+  }
+};
+
+
+const logout = async function (req, res, next) {
+  try {
+    await req.session.destroy();
+    return res.redirect("/login");
+  } catch (error) {
+    console.log(error);
+    req.error = error;
+    return next();
   }
 };
 
 module.exports = {
   register,
   login,
+  logout,
 }

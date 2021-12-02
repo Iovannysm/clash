@@ -1,24 +1,14 @@
-const jwt = require("jsonwebtoken");
+const { navRoutes, navAuthRoutes } = require("../utils/navLinks");
+const { User } = require("../models");
 
-module.exports = async function (req, res, next) {
-  try {
-    
-    const bearer = req.headers.authorization;
-    if(!bearer) {
-      return res.sendStatus(403);
+module.exports = function authRequired(req, res, next) {
+  if (req.session.currentUser) {
+    res.locals.routes = navRoutes;
+      res.locals.user = await User.findById(req.session.currentUser.id);
+    } else {
+      res.locals.routes = navAuthRoutes;
     }
+  
+    return next();
+}
 
-    const token = bearer.split(" ")[1];
-    
-    const payload = await jwt.verify(token, process.env.SECRET_KEY);
-
-    req.userId = payload._id;
-
-    next();
-  } catch (err) {
-    console.log(err);
-    return res
-      .status(500)
-      .json({ status: 500, message: "Internal Server Error" });
-  }
-};

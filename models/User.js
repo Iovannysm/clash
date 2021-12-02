@@ -21,15 +21,12 @@ const userSchema = new Schema(
       default: Date.now,
     },
     avatar: String,
+  },
+  {
+    timestamps: true,
   }
 );
 
-userSchema.set("toJSON", {
-  transform: (doc, ret, opt) => {
-    delete ret["password"];
-    return ret;
-  },
-});
 
 const User = mongoose.model('User', userSchema);
 

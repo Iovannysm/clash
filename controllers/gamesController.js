@@ -1,62 +1,77 @@
-const { Game } = require("../models"); 
+
+const { Game, Event } = require("../models"); 
+
+require("../middleware/authRequired");
+
 
 // Index
-const index = function(req, res) {
-  Game.find({}, function (error, foundGames) {
-    if (error) {
-      console.log(error);
-      return 
+const index = async function(req, res, next) {
+  try {
+    const allGames = await Game.find(query).populate("user").sort("-createdAt");
+    const allEvents = await Event.find({games: req.params.id}).populate("user").sort("-createdAt");
+    
+    context = {
+      games: allGames,
+      events: allEvents,
     }
 
-    res.json({
-      status: 200,
-      message: "All Games Found",
-      games: foundGames,
-      total: foundGames.length,
-      requestedAt: new Date(),
-    });
+    return res.render("games/index", context);
 
-  });
+  } catch(error) {
+      console.log(error);
+      req.error = error;
+      next();
+  }    
 };
 
 // Show
-const show = function(req, res) {
-  Game.findById(req.params.id, function (error, foundGame) {
-    if(error) {
-      console.log(error);
-      return
+const show = async function(req, res, next) {
+  try {
+    const game = await Game.findById(req.params.id).populate("user");
+    const allEvents = await Event.find(
+      { $and: [
+        {
+          game: req.params.id,
+        },
+        query
+      ]}
+    )
+    .populate("user")
+    .sort("-createdAt");
+
+    const context = {
+      game: game,
+      events: allEvents
     }
 
-    res.json({
-      status: 302,
-      message: `Found game with id ${foundGame._id}`,
-      game: foundGame,
-      requestedAt: new Date(),
-    });
+    return res.render("game/show", context);
 
-  });
+  } catch(error) {
+      console.log(error);
+      req.error = error;
+      next();
+  }
 };
 
 // Create
-const create = function(req, res) {
+const create = function(req, res, next) {
+  const data = req.body;
+  data.user = req.session.currentUser.id;
+
   Game.create(req.body, function(error, createdGame) {
     if(error) {
       console.log(error);
-      return
+      req.error = error
+      return next();
     }
 
-    res.json({
-      status: 201,
-      message: "Game Successfully Created",
-      game: savedGame,
-      requestedAt: new Date(),
-    });
+    res.redirect("/games");
 
   });
 };
 
 // Update 
-const update = function(req, res) {
+const update = function(req, res, next) {
   Game.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -64,34 +79,26 @@ const update = function(req, res) {
     function(error, updatedGame) {
       if(error) {
         console.log(error);
-        return
+        req.error = error
+        return next();
       }
 
-      res.json({
-        status: 200,
-        message: `Successfully Updated Game with id ${updatedGame._id}`,
-        game: updatedGame,
-        requestedAt: new Date(),
-      });
+      res.redirect(`/games/${req.params.id}`);
 
     }
   );
 };
 
 // Delete 
-const destroy = function(req, res) {
+const destroy = function(req, res, next) {
   Game.findByIdAndDelete(req.params.id, function(error, deletedGame) {
     if(error) {
-      console.log(error);
-      return
+        console.log(error);
+        req.error = error
+        return next();
     }
 
-    res.json({
-      status: 200,
-      message: `Successfully deleted Game by id ${deletedGame._id}`,
-      game: deletedGame,
-      requestedAt: new Date(),
-    });
+    res.redirect("/games");
 
   });
 };
