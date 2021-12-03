@@ -1,5 +1,4 @@
-const { Event } = require("../models");
-const Game = require("../models/Game");
+const { Event, Game } = require("../models");
 
 // Index
 const index = async function(req, res, next) {
@@ -24,12 +23,10 @@ const index = async function(req, res, next) {
 // Show
 const show = async function(req, res) {
   try {
-    const event = await Event.findById(req.params.id).populate("user");
-    const game = await Game.findById(req.params.id).populate("user");
-
+    const event = await Event.findById(req.params.id).populate("user game");
+    
     const context = {
-      event: event,
-      game: game
+      event: event
     }
 
     return res.render("event/show", context);

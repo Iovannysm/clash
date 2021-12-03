@@ -5,16 +5,22 @@ const eventSchema = new Schema(
   {
     
     content: String,
+
+    game: {
+      type: mongoose.Types.ObjectId,
+      ref: "Game",
+      required: true,
+    },
     
     user: {
       type: mongoose.Types.ObjectId,
       ref: "User",
-      require
+      required: true
     },
-    attendees: {
+    attendees: [{
       type: mongoose.Types.ObjectId,
       ref: "User",
-    },
+    }],
   },
   {
     timestamps: true,

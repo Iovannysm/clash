@@ -5,8 +5,10 @@
   "main": "index.js",
   "repository": "https://github.com/Iovannysm/clash.git",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "watch-sass": "sass --watch sass:public/styles",
+    "watch-nodemon": "nodemon server.js",
+    "dev": "open http://localhost:4000/ && concurrently --handle-input -n server,sass -c 'bgGreen.bold,bgMagenta.bold' 'npm:watch-nodemon' 'npm:watch-sass' rs ",
+    "start": "node server.js"
   },
   "author": "Iovanny Arroyo",
   "license": "MIT",
@@ -24,6 +26,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "concurrently": "^6.4.0",
     "nodemon": "^2.0.15"
   }
 }

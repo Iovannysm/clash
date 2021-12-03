@@ -31,7 +31,7 @@ app.use(methodOverride('_method'));
 //Session config to create cookies
 app.use(session({
   store: MongoStore.create({mongoUrl: process.env.MONGODB_URI}),
-  secret: process.env.SECRET,
+  secret: process.env.SECRET_KEY,
   resave: false,
   saveUninitialized: false,
   cookie: {
