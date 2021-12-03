@@ -1,7 +1,7 @@
 
 const { Game, Event } = require("../models"); 
 
-require("../middleware/authRequired");
+require("../middleware/navRequire");
 
 
 // Index

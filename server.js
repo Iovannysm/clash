@@ -51,6 +51,8 @@ app.use(rateLimit({
   message: "Please try again later or contact the system admin for more requests.",
 }));
 
+app.use(require("./middleware/navRequire"))
+
 // Home
 
 app.get('/', function(req, res) {

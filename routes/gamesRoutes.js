@@ -1,10 +1,10 @@
-const control = require("../controllers");
+const {games} = require("../controllers");
 const router = require("express").Router();
 
-router.get("/", control.games.index);
-router.get("/:id", control.games.show);
-router.post("/", control.games.create);
-router.put("/:id", control.games.update);
-router.delete("/:id", control.games.destroy);
+router.get("/", games.index);
+router.get("/:id", games.show);
+router.post("/", games.create);
+router.put("/:id", games.update);
+router.delete("/:id", games.destroy);
 
 module.exports = router;

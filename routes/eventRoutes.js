@@ -1,11 +1,11 @@
-const control = require("../controllers");
+const {events} = require("../controllers");
 const router = require("express").Router();
 
-router.get("/", control.events.index);
-router.get("/:id", control.events.show);
-router.post("/", control.events.create);
-router.put("/:id", control.events.update);
-router.delete("/:id", control.events.destroy);
+router.get("/", events.index);
+router.get("/:id", events.show);
+router.post("/", events.create);
+router.put("/:id", events.update);
+router.delete("/:id", events.destroy);
 
 module.exports = router;
 

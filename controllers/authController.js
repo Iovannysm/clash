@@ -43,7 +43,7 @@ const login = async function (req, res) {
     const isMatch = await bcrypt.compare(req.body.password, foundUser.password);
 
     if(!isMatch){
-      return res.redirect("/login");
+      return res.send("Password or Email invalid");
     }
 
     req.session.currentUser = {

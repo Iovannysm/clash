@@ -1,9 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include("./partials/head/_head.ejs" ) %>
-<body>
-  <%- include("./partials/nav/_nav.ejs" ) %> 
-  <h1>This is the beginning</h1>
   
-</body>
+
+    <!-- to bring in a partial we will use include -->
+    <%- include("./partials/head/_head", {page: "Events"}) %> 
+
+    
+
+  <body class="has-navbar-fixed-top">
+    <!-- https://bulma.io/documentation/components/navbar/#fixed-navbar -->
+    
+
+    <%- include("./partials/nav/_nav", { routes }) %> 
+
+
+    <section class="hero is-medium has-background-light">
+      <div class="hero-body">
+        <p class="title">All Events</p>
+      </div>
+    </section>
+
+    <form action="" method="get"></form>
+     <div class="field">
+       <p class="control has-icons"></p>
+     </div>
+
+    <main class="container is-max-widescreen">
+      <div class="columns is-multiline p-5">
+        <!-- tell user if no products exist -->
+        <% if(events.length === 0) { %> 
+          <div class="notification is-warning">
+            No Events Available At This Time
+          </div>
+        <% } %> 
+        <!-- loop through all the products -->
+        <% for(let idx = 0; idx < events.length; idx++){ %> <% const events =
+        events[idx] %>
+        <div class="column is-one-third">
+          <article class="card">
+            <section class="card-image">
+              <figure class="image is-3by3">
+                <img src="<%= events.image %>" alt="Placeholder image" />
+              </figure>
+            </section>
+            <div class="card-content">
+              <div class="content">
+                <h3>
+                  <a href="/event/<%= events.id %>"><%= events.content %> </a>
+                </h3>
+                <p><%= events.game %>$</p>
+              </div>
+            </div>
+          </article>
+        </div>
+        <% } %>
+      </div>
+    </main>
+  </body>
 </html>
