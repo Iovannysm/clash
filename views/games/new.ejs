@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../partials/head/_head", {page: "Events"}) %> 
+  <body class="has-navbar-fixed-top">
+  <%- include("../partials/nav/_nav", { routes }) %> 
+    
+    <!-- Form to Create games -->
+    <form action="/" method="POST">
+      <div class="field">
+        <label class="label">New Game</label>
+        <div class="control">
+          <input class="input" type="title" placeholder="Title">
+          <input class="input" type="img" placeholder="Image">
+          <input class="input" type="content" placeholder="Description">
+        </div>
+        <input class="button is-success" type="submit" value="Create" />
+      </div>
+    </form>
+       
+
+
+  </body>  
+</html>

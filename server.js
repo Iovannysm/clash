@@ -10,10 +10,12 @@ const MongoStore = require("connect-mongo");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const morgan = require("morgan");
+const helmet = require("helmet");
+const hpp = require("hpp");
 
 
 /* === Internal Modules === */
-const routes = require("./routes"); 
+const controller = require("./controllers")
 require("./config/db.connection");
 
 /* === System Variables === */
@@ -22,6 +24,12 @@ const PORT = process.env.PORT;
 
 
 /* === System Configuration === */
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 
 app.use(express.urlencoded({extended: false}))
 app.set("view engine", "ejs");
@@ -41,6 +49,8 @@ app.use(session({
 
 /* === Middleware === */
 
+
+
 app.use(mongoSanitize());
 
 app.use(morgan("dev"));
@@ -51,7 +61,9 @@ app.use(rateLimit({
   message: "Please try again later or contact the system admin for more requests.",
 }));
 
-app.use(require("./middleware/navRequire"))
+app.use(hpp());
+
+app.use(require("./utils/navLinks"));
 
 // Home
 
@@ -60,10 +72,10 @@ app.get('/', function(req, res) {
 })
 
 
-app.use("/games", routes.games);
-app.use("/events", routes.events);
-app.use("/auth", routes.auth);
-app.use("/user", routes.user);
+app.use("/games", controller.games);
+app.use("/events", require("./middleware/authRequired"), controller.events);
+app.use("/", controller.auth);
+app.use("/user", controller.user);
 
 app.get("/*", function (req, res) {
   const context = { error: req.error };

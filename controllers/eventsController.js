@@ -1,15 +1,25 @@
+const express = require("express");
+const router = express.Router();
 const { Event, Game } = require("../models");
 
+
+// Help
+router.get("/help", function (req, res) {
+  res.send("help");
+});
+
 // Index
-const index = async function(req, res, next) {
+router.get( "/",async function(req, res, next) {
   try {
-    const allEvents = await Event.find(query).populate("user").sort("-createdAt");
+    const allEvents = await Event.find({}).populate("user").sort("-createdAt");
     const allGames = await Game.find({events: req.params.id}).populate("user").sort("-createdAt");
 
     context = {
       events: allEvents,
       games: allGames
     }
+
+    console.log("hitting route")
 
     return res.render("events/index", context);
 
@@ -18,10 +28,10 @@ const index = async function(req, res, next) {
       req.error = error;
       next();
   }
-};
+});
 
 // Show
-const show = async function(req, res) {
+router.get("/:id", async function(req, res) {
   try {
     const event = await Event.findById(req.params.id).populate("user game");
     
@@ -29,17 +39,22 @@ const show = async function(req, res) {
       event: event
     }
 
-    return res.render("event/show", context);
+    return res.render("events/show", context);
 
   } catch(error) {
       console.log(error);
       req.error = error;
       next();
   }
-};
+});
+
+// New
+router.get("/new", function(req, res){
+  res.render("events/new");
+});
 
 // Create
-const create = function(req, res) {
+router.post("/", function(req, res) {
   const data = req.body;
   data.user = req.session.currentUser.id;
 
@@ -50,12 +65,31 @@ const create = function(req, res) {
       return next();
     }
 
-    res.redirect("/events");
+    res.redirect(`/events/${data.event}`);
   });
-};
+});
+
+// Edit
+router.get("/:id/edit", function (req, res, next) {
+  Event.findById(req.params.id, function (error, foundEvent) {
+    if (error) {
+      console.log(error);
+      req.error = error;
+      return next();
+    }
+
+    const context = {
+      product: foundEvent,
+    };
+
+    res.render("events/edit", context);
+  });
+});
+
+
 
 // Update 
-const update = function(req, res) {
+router.put("/:id",function(req, res, next) {
   Event.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -63,17 +97,18 @@ const update = function(req, res) {
     function(error, updatedEvent) {
       if(error) {
         console.log(error);
-        return
+        req.error = error 
+        return next()
       }
 
       res.redirect(`/event/${req.params.id}`);
 
     }
   );
-};
+});
 
 // Delete 
-const destroy = function(req, res) {
+router.delete("/:id", function(req, res) {
   Event.findByIdAndDelete(req.params.id, function(error, deletedEvent) {
     if(error) {
       console.log(error);
@@ -83,12 +118,6 @@ const destroy = function(req, res) {
     res.redirect("/events");
 
   });
-};
+});
 
-module.exports = {
-  index,
-  show,
-  create,
-  update,
-  destroy,
-};
+module.exports = router;

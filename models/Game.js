@@ -1,11 +1,19 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const gameSchema = new Schema(
+const gameSchema = new mongoose.Schema(
   {
-    title: String,
-    img: String,
-    content: String,
+    title: {
+      type: String,
+      required: [true, "Name needs to be provided."],
+    },
+    // image: {
+    //   type: String,
+    //   required: [true, "Image needs to be provided."],
+    // },
+    content: {
+      type: String,
+      required: [true, "Description needs to be provided."],
+    },
     user: {
       type: mongoose.Types.ObjectId,
       ref: "User",

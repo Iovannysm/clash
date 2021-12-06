@@ -1,13 +1,14 @@
 
 const { Game, Event } = require("../models"); 
+const express = require("express");
+const router = express.Router();
 
-require("../middleware/navRequire");
 
 
 // Index
-const index = async function(req, res, next) {
+router.get("/",async function(req, res, next) {
   try {
-    const allGames = await Game.find(query).populate("user").sort("-createdAt");
+    const allGames = await Game.find({}).populate("user").sort("-createdAt");
     const allEvents = await Event.find({games: req.params.id}).populate("user").sort("-createdAt");
     
     context = {
@@ -22,19 +23,16 @@ const index = async function(req, res, next) {
       req.error = error;
       next();
   }    
-};
+});
 
 // Show
-const show = async function(req, res, next) {
+router.get("/:id" ,async function(req, res, next) {
   try {
     const game = await Game.findById(req.params.id).populate("user");
     const allEvents = await Event.find(
-      { $and: [
-        {
-          game: req.params.id,
-        },
-        query
-      ]}
+      {
+        game: req.params.id,
+      }
     )
     .populate("user")
     .sort("-createdAt");
@@ -44,34 +42,57 @@ const show = async function(req, res, next) {
       events: allEvents
     }
 
-    return res.render("game/show", context);
+    return res.render("games/show", context);
 
   } catch(error) {
       console.log(error);
       req.error = error;
       next();
   }
-};
+});
+
+// New
+router.get("/new", function(req, res){
+  res.render("games/new");
+});
+
 
 // Create
-const create = function(req, res, next) {
+router.post("/", function(req, res, next) {
   const data = req.body;
   data.user = req.session.currentUser.id;
 
-  Game.create(req.body, function(error, createdGame) {
+  Game.create(data, function(error, createdGame) {
     if(error) {
       console.log(error);
       req.error = error
       return next();
     }
 
-    res.redirect("/games");
+    res.redirect("/games/new");
 
   });
-};
+});
+
+// Edit
+router.get("/:id/edit", function (req, res, next) {
+  Game.findById(req.params.id, function (error, foundGames) {
+    if (error) {
+      console.log(error);
+      req.error = error;
+      return next();
+    }
+
+    const context = {
+      product: foundGames,
+    };
+
+    res.render("games/edit", context);
+  });
+});
 
 // Update 
-const update = function(req, res, next) {
+router.put("/:id",function(req, res, next) {
   Game.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -87,10 +108,10 @@ const update = function(req, res, next) {
 
     }
   );
-};
+});
 
 // Delete 
-const destroy = function(req, res, next) {
+router.delete("/:id",function(req, res, next) {
   Game.findByIdAndDelete(req.params.id, function(error, deletedGame) {
     if(error) {
         console.log(error);
@@ -101,12 +122,7 @@ const destroy = function(req, res, next) {
     res.redirect("/games");
 
   });
-};
+});
 
-module.exports = {
-  index,
-  show,
-  create,
-  update,
-  destroy,
-};
+module.exports = router;
+  

@@ -1,8 +1,8 @@
 
-const navRoutes = [
+const routes = [
   {
       href: "/games",
-      title: "Home",
+      title: "Games",
   },
   {
       href: "/events",
@@ -13,9 +13,13 @@ const navRoutes = [
       title:"Account",
 
   },
+  {
+    href: "logout",
+    title: "Logout"
+  }
 ];
 
-const navAuthRoutes = [
+const authRoutes = [
   {
       href: "/login",
       title: "Login",
@@ -27,7 +31,13 @@ const navAuthRoutes = [
  
 ];
 
-module.exports = {
-  navRoutes,
-  navAuthRoutes
-}
+module.exports = function navLinks(req, res, next) {
+  if (req.session.currentUser) {
+    res.locals.routes = routes;
+    res.locals.user = req.session.currentUser;
+  } else {
+    res.locals.routes = authRoutes;
+  }
+
+  next();
+};

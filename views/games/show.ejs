@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include("../partials/head/_head", {page: "Events"}) %> 
+   <body class="has-navbar-fixed-top">
+     <%- include("../partials/nav/_nav", { routes }) %> 
+    
+     <div class="container is-max-widescreen p-5">
+      <article class="media">
+        <figure class="media-left">
+          <p class="image is-328x328">
+            <img src="<%= games.image %>" alt="product img" />
+          </p>
+        </figure>
+        <div class="media-content">
+          <div class="content">
+            <h3>name: <%= games.title %></h3>
+            <small>price: <%= games.content %></small>
+
+            <!-- buttons for edit and delete -->
+            <div class="field mt-5 is-grouped">
+
+              <div class="control">
+                <a href="/games/<%= games.id %>/edit" class="button is-info">Edit Game</a>
+              </div>
+
+              <p class="control">
+                <form action="/products/<%= games.id %>?_method=DELETE" method="POST" >
+                  <input class="button is-danger" type="submit" value="Delete Product">
+                </form>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </article>
+    </div>
+
+  </body>  
+</html>

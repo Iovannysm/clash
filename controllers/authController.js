@@ -1,9 +1,16 @@
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
+const express = require("express");
+const router= express.Router();
 
+
+// get register
+router.get("/register", function (req, res, next) {
+  return res.render("auth/register");
+});
 
 // Register
-const register = async function(req, res) {
+router.post("/register", async function(req, res) {
   try {
     const userExist = await User.exists({ email: req.body.email });
 
@@ -28,13 +35,17 @@ const register = async function(req, res) {
     req.error = error
     return next();
   }
-};
+});
 
+//get login
+router.get("/login", function (req, res, next) {
+  return res.render("auth/login");
+});
 
 // Login
-const login = async function (req, res) {
+router.post( "/login", async function (req, res) {
   try {
-    const foundUser = await User.findOne({ email:req.body.email });
+    const foundUser = await User.findOne({ email:req.body.email }).select("+password");
       
     if(!foundUser) {
       return res.redirect("/register");
@@ -51,17 +62,17 @@ const login = async function (req, res) {
       username: foundUser.username,
     }
       
-    return res.redirect("/events");
+    return res.redirect("/user");
         
   } catch(error) {
     console.log(error);
     req.error = error;
     return next();
   }
-};
+});
 
 
-const logout = async function (req, res, next) {
+router.get("/logout", async function (req, res, next) {
   try {
     await req.session.destroy();
     return res.redirect("/login");
@@ -70,10 +81,6 @@ const logout = async function (req, res, next) {
     req.error = error;
     return next();
   }
-};
+});
 
-module.exports = {
-  register,
-  login,
-  logout,
-}
+module.exports = router;

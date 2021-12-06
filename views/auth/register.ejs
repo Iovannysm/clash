@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <!-- Head partial -->
-  <%- include('../partials/head/_head.esj', { page: 'register' } ) %>
+  <%- include('../partials/head/_head', { page: 'register' } ) %>
 
   <body class="has-navbar-fixed-top">
     <!-- Navbar Partial -->
-    <%- include('../partials/nav/_nav.ejs', { routes } ) %>
+    <%- include('../partials/nav/_nav', { routes } ) %>
 
-    <section class="hero is-fullheight-with-navbar is-link">
+    <section class="hero is-fullheight-with-navbar">
       <div class="hero-body is-flex-direction-column">
         <h1 class="title">Register</h1>
         <form action="/register" method="POST" class="box">
@@ -40,13 +40,13 @@
                 name="password"
                 class="input"
                 type="password"
-                placeholder="******"
+                placeholder="*********"
               />
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-link is-fullwidth">Submit</button>
+              <button class="button is-rounded is-link is-fullwidth">Submit</button>
             </div>
           </div>
         </form>

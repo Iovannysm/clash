@@ -20,14 +20,14 @@
   </div>
 
   <!-- links  -->
-  <div class="navbar-menu navbar-end">
+  <div class="navbar-menu navbar-end p-2">
     <% if(typeof user !== 'undefined'){ %>
     <p class="navbar-item"><%= user.username %></p>
     <% } %>
     <!-- render routes -->
     <% routes.forEach(route => { %>
 
-    <a class="navbar-item" href="<%= route.href %>"> <%= route.title %> </a>
+    <a class="button is-rounded" href="<%= route.href %>"> <%= route.title %> </a>
 
     <% }) %>
   </div>

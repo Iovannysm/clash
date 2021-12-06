@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include("../partials/head/_head", {page: "Events"}) %> 
+   <body class="has-navbar-fixed-top">
+     <%- include("../partials/nav/_nav", { routes }) %> 
+    
+     <main class="container is-max-widescreen">
+      <div class="columns is-multiline p-6">
+        <!-- tell user if no products exist -->
+        <% if(events.length === 0) { %> 
+          <div class="notification is-warning">
+            No Games Events At This Time
+          </div>
+        <% } %> 
+        <!-- loop through all the products -->
+        <% for(let idx = 0; idx < events.length; idx++){ %> <% const events =
+        events[idx] %>
+        <div class="column">
+            
+            </section>
+            <div class="card-content">
+              <div class="content">
+                <h3>
+                  <a href="/games/<%= games.id %>"><%= games.title %> </a>
+                </h3>
+                <p><%= games.content %>$</p>
+              </div>
+            </div>
+          </article>
+        </div>
+        <% } %>
+      </div>
+    </main>
+
+    <form action="/events/new" method="GET">
+      <input class="button" type="submit" value="New Game" />
+    </form>
+
+  </body>  
+</html>
